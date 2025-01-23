@@ -1,0 +1,16 @@
+{% extends 'core/../base.html' %}
+
+{% block title %}Purchase Credit{% endblock %}
+
+{% block content %}
+<h1>Purchase Credit</h1>
+<p>Buy credits to send more messages.</p>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="creditAmount" class="form-label">Amount</label>
+        <input type="number" class="form-control" id="creditAmount" name="amount">
+    </div>
+    <button type="submit" class="btn btn-success">Purchase</button>
+</form>
+{% endblock %}

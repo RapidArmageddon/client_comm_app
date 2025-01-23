@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Compose Messages{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Card Wrapper -->
+    <div class="card shadow-lg border-0" style="background-color: rgba(249, 231, 212, 255);">
+        <div class="card-header text-center" style="background-color: rgba(249, 231, 212, 255); color: #2c2c2c; border-bottom: none;">
+            <h1 class="mb-0" style="font-weight: bold;">Compose Messages</h1>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Client Selection -->
+                <div class="mb-4">
+                    <label for="client-search" class="form-label" style="color: #2c2c2c; font-weight: bold;">Search Clients:</label>
+                    <input type="text" id="client-search" class="form-control mb-2" placeholder="Search clients...">
+                    <label for="clients" class="form-label" style="color: #2c2c2c; font-weight: bold;">Select Clients:</label>
+                    <select id="clients" name="clients[]" class="form-select" multiple>
+                        {% for client in clients %}
+                        <option value="{{ client.id }}">{{ client.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Hold down Ctrl (Windows) or Cmd (Mac) to select multiple clients.</small>
+                    <div id="selected-clients" class="mt-2 text-secondary" style="opacity: 0.8;">
+                        <!-- Selected clients will appear here -->
+                    </div>
+                </div>
+
+                <!-- Data Fields -->
+                <div class="mb-4">
+                    <label class="form-label" style="color: #2c2c2c; font-weight: bold;">Select Data Fields:</label>
+                    <div class="d-flex flex-wrap gap-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="name" name="data_fields" value="name">
+                            <label class="form-check-label" for="name" style="color: #2c2c2c;">Name</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="phone_number" name="data_fields" value="phone_number">
+                            <label class="form-check-label" for="phone_number" style="color: #2c2c2c;">Phone Number</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="email" name="data_fields" value="email">
+                            <label class="form-check-label" for="email" style="color: #2c2c2c;">Email</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="last_purchase_date" name="data_fields" value="last_purchase_date">
+                            <label class="form-check-label" for="last_purchase_date" style="color: #2c2c2c;">Last Purchase Date</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Promotional Event -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="promotional_event" name="promotional_event">
+                        <label class="form-check-label" for="promotional_event" style="color: #2c2c2c;">Promotional Event?</label>
+                    </div>
+                    <input type="text" class="form-control mt-2" id="discount" name="discount" placeholder="Enter discount percentage" style="display: none;">
+                </div>
+
+                <!-- Tone -->
+                <div class="mb-4">
+                    <label for="tone" class="form-label" style="color: #2c2c2c; font-weight: bold;">Tone of Message:</label>
+                    <input type="text" id="tone" name="tone" class="form-control" placeholder="Enter the tone (e.g., friendly, humorous)">
+                </div>
+
+                <!-- Topic -->
+                <div class="mb-4">
+                    <label for="topic" class="form-label" style="color: #2c2c2c; font-weight: bold;">Topic of Message:</label>
+                    <input type="text" id="topic" name="topic" class="form-control">
+                </div>
+
+                <!-- Brand Specific -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="brand_specific" name="brand_specific">
+                        <label class="form-check-label" for="brand_specific" style="color: #2c2c2c;">Brand Specific?</label>
+                    </div>
+                    <input type="text" class="form-control mt-2" id="brand" name="brand" placeholder="Enter brand name(s)" style="display: none;">
+                </div>
+
+                <!-- Link -->
+                <div class="mb-4">
+                    <label for="link" class="form-label" style="color: #2c2c2c; font-weight: bold;">Link to Include in Message:</label>
+                    <input type="text" id="link" name="link" class="form-control">
+                </div>
+
+                <!-- Sign Off -->
+                <div class="mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="sign_off_name" name="sign_off_name">
+                        <label class="form-check-label" for="sign_off_name" style="color: #2c2c2c;">Include Sign Off Name?</label>
+                    </div>
+                    <input type="text" class="form-control mt-2" id="sign_off" name="sign_off" placeholder="Enter sign-off name">
+                </div>
+
+                <!-- Store Name -->
+                <div class="mb-4">
+                    <label for="store_name" class="form-label" style="color: #2c2c2c; font-weight: bold;">Store/Company Name:</label>
+                    <input type="text" id="store_name" name="store_name" class="form-control">
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-gradient-primary w-100 py-2">Generate Message Summary</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Styling -->
+<style>
+    .card {
+        border-radius: 10px;
+        background-color: rgba(249, 231, 212, 255); /* Matches body background */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(to right, #b5a38e, #e6d2b5);
+        color: white;
+        font-weight: bold;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn-gradient-primary:hover {
+        transform: scale(1.05);
+        background: linear-gradient(to right, #948374, #d1bda8);
+    }
+</style>
+{% endblock %}

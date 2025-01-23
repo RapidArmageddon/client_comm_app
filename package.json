@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@daypilot/daypilot-lite-javascript": "^3.30.0",
+    "fullcalendar": "^6.1.15",
+    "jquery": "^3.7.1",
+    "moment": "^2.30.1"
+  }
+}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Conversations</h1>
+    <hr>
+
+    <!-- List of conversations -->
+    <div class="list-group" id="conversation-list">
+        <!-- Conversations will load dynamically -->
+    </div>
+
+    <!-- Message Box -->
+    <div id="message-box" class="d-none mt-4">
+        <h3 id="selected-conversation-name">Conversation with </h3>
+        <div id="message-thread" class="border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+            <!-- Messages will load dynamically -->
+        </div>
+        <form id="reply-form">
+            <div class="input-group">
+                <input type="text" id="reply-text" class="form-control" placeholder="Type your message">
+                <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    // JavaScript to fetch conversations and send replies
+    document.addEventListener('DOMContentLoaded', function () {
+        const conversationList = document.getElementById('conversation-list');
+        const messageBox = document.getElementById('message-box');
+        const messageThread = document.getElementById('message-thread');
+        const replyForm = document.getElementById('reply-form');
+        const replyText = document.getElementById('reply-text');
+        let selectedConversation = null;
+
+        // Fetch conversations from the API
+        fetch('/api/conversations/')
+            .then(response => response.json())
+            .then(data => {
+                conversationList.innerHTML = data.conversations.map(conversation => `
+                    <button class="list-group-item list-group-item-action" data-id="${conversation.id}">
+                        ${conversation.name} (${conversation.unread_count} unread)
+                    </button>
+                `).join('');
+            });
+
+        // Click event for selecting a conversation
+        conversationList.addEventListener('click', function (event) {
+            const button = event.target.closest('button');
+            if (!button) return;
+            selectedConversation = button.getAttribute('data-id');
+
+            // Fetch messages for the selected conversation
+            fetch(`/api/conversations/${selectedConversation}/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('selected-conversation-name').textContent = `Conversation with ${data.name}`;
+                    messageThread.innerHTML = data.messages.map(message => `
+                        <div class="${message.from === 'business' ? 'text-end' : 'text-start'}">
+                            <p>${message.body}</p>
+                            <small>${message.timestamp}</small>
+                        </div>
+                    `).join('');
+                    messageBox.classList.remove('d-none');
+                });
+        });
+
+        // Submit event for replying
+        replyForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const message = replyText.value.trim();
+            if (!message || !selectedConversation) return;
+
+            // Send message via API
+            fetch(`/api/conversations/${selectedConversation}/send/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            }).then(response => {
+                if (response.ok) {
+                    const timestamp = new Date().toLocaleString();
+                    messageThread.innerHTML += `
+                        <div class="text-end">
+                            <p>${message}</p>
+                            <small>${timestamp}</small>
+                        </div>
+                    `;
+                    replyText.value = '';
+                } else {
+                    alert('Failed to send message.');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

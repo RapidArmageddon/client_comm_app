@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Join Organisation{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Join an Organisation</h2>
+    <p>Enter the Organisation ID provided by your administrator to join an existing organisation.</p>
+
+    <!-- Display non-field errors at the top of the form -->
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_organisation_id" class="form-label">Organisation ID</label>
+            {{ form.organisation_id }}
+            {% for error in form.organisation_id.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Join Organisation</button>
+    </form>
+
+    <!-- Display Django messages (success or error) -->
+    {% if messages %}
+        <div class="mt-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

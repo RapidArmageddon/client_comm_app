@@ -1,0 +1,98 @@
+{% extends 'core/../base.html' %}
+
+{% block title %}Client List{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Client List</h1>
+
+    <!-- Add the Upload Clients Button -->
+    <div class="mb-3 text-end">
+        <a href="{% url 'upload_csv' %}" class="btn btn-primary">Upload Clients</a>
+    </div>
+
+    <ul class="nav nav-tabs" id="clientTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" id="personal-clients-tab" data-bs-toggle="tab" data-bs-target="#personal-clients" type="button" role="tab" aria-controls="personal-clients" aria-selected="true">Personal Clients</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="organisation-clients-tab" data-bs-toggle="tab" data-bs-target="#organisation-clients" type="button" role="tab" aria-controls="organisation-clients" aria-selected="false">Organisation's Clients</button>
+        </li>
+    </ul>
+    <div class="tab-content mt-4">
+        <!-- Personal Clients Tab -->
+        <div class="tab-pane fade show active" id="personal-clients" role="tabpanel" aria-labelledby="personal-clients-tab">
+            <form method="post">
+                {% csrf_token %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="select_all_personal"> <!-- Select All -->
+                            </th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Total Spent</th>
+                            <th>Last Purchase Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in personal_clients %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="selected_personal_clients" value="{{ client.id }}">
+                            </td>
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.phone }}</td>
+                            <td>${{ client.total_spent }}</td>
+                            <td>{{ client.last_purchase_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button type="submit" name="delete_personal_selected" class="btn btn-danger mt-3">Delete Selected</button>
+                <button type="submit" name="export_to_organisation" class="btn btn-success mt-3">Export to Organisation</button>
+            </form>
+        </div>
+
+        <!-- Organisation's Clients Tab -->
+        <div class="tab-pane fade" id="organisation-clients" role="tabpanel" aria-labelledby="organisation-clients-tab">
+            <form method="post">
+                {% csrf_token %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Total Spent</th>
+                            <th>Last Purchase Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in organisation_clients %}
+                        <tr>
+                            <td>{{ client.name }}</td>
+                            <td>{{ client.email }}</td>
+                            <td>{{ client.phone }}</td>
+                            <td>${{ client.total_spent }}</td>
+                            <td>{{ client.last_purchase_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to toggle "Select All" functionality for personal clients
+    document.getElementById('select_all_personal').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="selected_personal_clients"]');
+        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+    });
+</script>
+{% endblock %}

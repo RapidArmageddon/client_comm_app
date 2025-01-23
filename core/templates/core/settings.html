@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Account Settings</h2>
+    <form method="post" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+
+        <!-- Profile Photo -->
+        <div class="mb-3 text-center">
+            <img
+                src="{% if user.profile_photo %}{{ user.profile_photo.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}"
+                class="img-fluid rounded-circle"
+                alt="Profile Photo"
+                style="width: 150px; height: 150px; object-fit: cover;">
+            <div class="mt-2">
+                <label for="id_profile_photo" class="form-label">Change Profile Photo</label>
+                <input type="file" class="form-control" id="id_profile_photo" name="profile_photo">
+            </div>
+        </div>
+
+        <!-- User Details -->
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="id_name" name="name" value="{{ user.name }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="id_business" class="form-label">Business</label>
+            <input type="text" class="form-control" id="id_business" name="business" value="{{ user.business }}">
+        </div>
+
+         <!-- Organisation Details -->
+        {% if user.organisation %}
+        <div class="mb-3">
+            <label class="form-label">Organisation Name</label>
+            <input type="text" class="form-control" value="{{ user.organisation.name }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Organisation ID</label>
+            <input type="text" class="form-control" value="{{ user.organisation.organisation_id }}" readonly>
+        </div>
+    {% else %}
+        <p class="text-muted">You are not currently part of an organisation.</p>
+        <a href="{% url 'join_organisation' %}" class="btn btn-primary">Join Organisation</a>
+        <a href="{% url 'add_organisation' %}" class="btn btn-secondary">Create Organisation</a>
+    {% endif %}
+        <div class="mb-3">
+            <label for="id_phone_number" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="id_phone_number" name="phone_number" value="{{ user.phone_number }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="id_whatsapp_id" class="form-label">WhatsApp ID</label>
+            <input type="text" class="form-control" id="id_whatsapp_id" name="whatsapp_id" value="{{ user.whatsapp_id }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="id_phone_number" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" id="id_phone_number" name="phone_number" value="{{ user.phone_number }}">
+        </div>
+
+
+
+        <!-- Save Button -->
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

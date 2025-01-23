@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Analytics Dashboard</h1>
+    <hr>
+
+    <!-- Summary Cards -->
+    <div class="row text-center mb-5">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Clients</h5>
+                    <p id="total-clients" class="display-6">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Messages</h5>
+                    <p id="total-messages" class="display-6">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Events</h5>
+                    <p id="total-events" class="display-6">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Total Spend</h5>
+                    <p id="total-spend" class="display-6">$0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <!-- Client Spend Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Client Spend Overview</h5>
+                    <canvas id="client-spend-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Participation Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Event Participation</h5>
+                    <canvas id="event-participation-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Performance -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Message Performance</h5>
+                    <canvas id="message-performance-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+    <!-- Messages Sent vs Spend Chart -->
+    <div class="col-md-12">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Messages Sent vs Customer Spend</h5>
+                <canvas id="messages-vs-spend-chart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+
+<script>
+    // Fetch Analytics Data via API
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('/api/analytics-data/')
+            .then(response => response.json())
+            .then(data => {
+                // Populate Summary Cards
+                document.getElementById('total-clients').textContent = data.total_clients;
+                document.getElementById('total-messages').textContent = data.total_messages;
+                document.getElementById('total-events').textContent = data.total_events;
+                document.getElementById('total-spend').textContent =
+                    `$${parseFloat(data.total_spend || 0).toFixed(2)}`;
+
+                // Client Spend Chart
+                const clientSpendCtx = document.getElementById('client-spend-chart').getContext('2d');
+                new Chart(clientSpendCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.client_names,
+                        datasets: [{
+                            label: 'Total Spend ($)',
+                            data: data.client_spends,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1.5 }
+                });
+
+                // Event Participation Chart
+                const eventParticipationCtx = document.getElementById('event-participation-chart').getContext('2d');
+                new Chart(eventParticipationCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.event_names,
+                        datasets: [{
+                            label: 'Event Participation',
+                            data: data.event_counts,
+                            backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1 }
+                });
+                 // Messages Sent vs Customer Spend Chart
+                 const messagesVsSpendCtx = document.getElementById('messages-vs-spend-chart').getContext('2d');
+                new Chart(messagesVsSpendCtx, {
+                     type: 'bar',
+                    data: {
+                         labels: data.spend_vs_message_names,
+                          datasets: [
+                        {
+                            label: 'Total Spend ($)',
+                            data: data.spend_vs_message_spends,
+                            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Messages Sent',
+                            data: data.spend_vs_message_counts,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                     },
+                    options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: { stacked: true }
+                    },
+                    plugins: {
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                }
+            });
+                // Message Performance Chart
+                const messagePerformanceCtx = document.getElementById('message-performance-chart').getContext('2d');
+                new Chart(messagePerformanceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data.message_dates,
+                        datasets: [{
+                            label: 'Messages Sent',
+                            data: data.messages_per_day,
+                            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                            borderColor: 'rgba(255, 159, 64, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true, aspectRatio: 1.5 }
+                });
+            })
+            .catch(error => console.error('Error fetching analytics data:', error));
+    });
+</script>
+{% endblock %}

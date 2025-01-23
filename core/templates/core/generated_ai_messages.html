@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center my-4">Generated AI Messages</h2>
+
+    <!-- Loading indicator -->
+    <div id="loading" class="alert alert-info text-center">
+        Generating messages... Please wait.
+    </div>
+
+    <!-- Download CSV Button -->
+    <div class="text-end mb-3">
+        <button id="download-csv" class="btn btn-gradient-primary">Download as CSV</button>
+    </div>
+
+    <!-- Table to display the streamed messages -->
+    <table class="table table-striped mt-4" id="message-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Message</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="message-body">
+            <!-- Placeholder row -->
+            <tr id="placeholder-row">
+                <td colspan="4" class="text-center text-muted">Waiting for messages...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const messageTable = document.getElementById("message-table");
+        const messageBody = document.getElementById("message-body");
+        const loadingIndicator = document.getElementById("loading");
+        const downloadCsvButton = document.getElementById("download-csv");
+
+        if (!messageTable || !messageBody || !loadingIndicator || !downloadCsvButton) {
+            console.error("One or more required DOM elements are missing.");
+            return;
+        }
+
+        try {
+            const eventSource = new EventSource("{% url 'generate_ai_messages_stream' %}");
+            console.log("EventSource initialized:", eventSource);
+
+            eventSource.onmessage = function (event) {
+                console.log("Message received from stream:", event.data);
+
+                try {
+                    const data = JSON.parse(event.data);
+
+                    if (document.getElementById("placeholder-row")) {
+                        document.getElementById("placeholder-row").remove();
+                    }
+
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td class="copyable">${data.name || 'N/A'}</td>
+                        <td class="copyable">${data.phone_number || 'N/A'}</td>
+                        <td contenteditable="true" class="editable">${data.message || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary send-btn">Send</button>
+                        </td>
+                    `;
+                    messageBody.appendChild(row);
+                } catch (error) {
+                    console.error("Error parsing or processing streamed message:", error);
+                }
+            };
+
+            eventSource.addEventListener("end", function () {
+                console.log("Streaming completed.");
+                loadingIndicator.style.display = "none";
+                eventSource.close();
+            });
+
+            eventSource.onerror = function () {
+                console.error("Error with EventSource.");
+                loadingIndicator.textContent = "An error occurred while generating messages. Please try again.";
+                loadingIndicator.className = "alert alert-danger";
+                eventSource.close();
+            };
+        } catch (error) {
+            console.error("Error initializing EventSource:", error);
+        }
+
+        // Send Button Functionality
+        messageBody.addEventListener("click", function (event) {
+            if (event.target.classList.contains("send-btn")) {
+                const row = event.target.closest("tr");
+                const phoneNumber = row.querySelector("td:nth-child(2)").innerText.trim();
+                const message = row.querySelector("td:nth-child(3)").innerText.trim();
+
+                if (phoneNumber && message) {
+                    console.log(`Sending message to: ${phoneNumber}`);
+
+                    // Send data to server via AJAX or Fetch API
+                    fetch("{% url 'send_message' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: JSON.stringify({
+                            phone_number: phoneNumber,
+                            message: message,
+                        }),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log("Message sent successfully!");
+                                row.classList.add("sent"); // Add a visual indicator
+                            } else {
+                                console.error("Failed to send message:", data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error sending message:", error);
+                        });
+                } else {
+                    console.error("Phone number or message is missing.");
+                }
+            }
+        });
+
+        // Download CSV functionality remains unchanged
+        downloadCsvButton.addEventListener("click", function () {
+            const rows = Array.from(messageBody.querySelectorAll("tr"));
+            if (rows.length === 0) {
+                alert("No data available to download.");
+                return;
+            }
+
+            const csvRows = [["Name", "Phone Number", "Message"]];
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td");
+                if (cells.length >= 3) {
+                    const name = cells[0].innerText.trim();
+                    const phone = cells[1].innerText.trim();
+                    const message = cells[2].innerText.trim();
+                    csvRows.push([name, phone, message]);
+                }
+            });
+
+            const csvContent = csvRows.map(row => row.map(cell => `"${cell}"`).join(",")).join("\n");
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = "ai_messages.csv";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Generated Messages{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color: black;">AI Generated Messages</h2>
+    <hr>
+
+    {% if generated_messages %}
+    <div class="alert alert-success mt-4">
+        <h3>Generated Messages</h3>
+        <pre>{{ generated_messages }}</pre>
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        <p>No messages could be generated. Please go back and try again.</p>
+        <a href="{% url 'message_summary' %}" class="btn btn-primary">Return to Message Summary</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

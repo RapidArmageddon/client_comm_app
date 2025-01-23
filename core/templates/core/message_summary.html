@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Summary{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4" style="color: black;">Message Summary</h2>
+    <hr>
+
+    {% if client_statements %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Last Purchase Date</th>
+                <th>Promotional Event</th>
+                <th>Discount</th>
+                <th>Tone</th>
+                <th>Topic</th>
+                <th>Brand Specific</th>
+                <th>Brand</th>
+                <th>Link</th>
+                <th>Sign Off</th>
+                <th>Store Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for statement in client_statements %}
+            <tr>
+                <td>{{ statement.name|default:"N/A" }}</td>
+                <td>{{ statement.phone_number|default:"N/A" }}</td>
+                <td>{{ statement.email|default:"N/A" }}</td>
+                <td>{{ statement.last_purchase_date|default:"N/A" }}</td>
+                <td>{{ statement.promotional_event|default:"No" }}</td>
+                <td>{{ statement.discount|default:"N/A" }}</td>
+                <td>{{ statement.tone|default:"N/A" }}</td>
+                <td>{{ statement.topic|default:"N/A" }}</td>
+                <td>{{ statement.brand_specific|default:"No" }}</td>
+                <td>{{ statement.brand|default:"N/A" }}</td>
+                <td>
+                    {% if statement.link %}
+                    <a href="{{ statement.link }}" target="_blank">View</a>
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+                <td>{{ statement.sign_off|default:"N/A" }}</td>
+                <td>{{ statement.store_name|default:"N/A" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        <p>No client statements available to display. Please go back and create some.</p>
+        <a href="{% url 'messages' %}" class="btn btn-primary">Return to Compose Messages</a>
+    </div>
+    {% endif %}
+    <!-- Button to Generate AI Messages -->
+    <div class="text-center mt-4">
+        <a href="{% url 'generate_ai_messages_page' %}" class="btn btn-gradient-primary">Generate AI Messages</a>
+</div>
+{% endblock %}

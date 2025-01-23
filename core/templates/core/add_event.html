@@ -1,0 +1,12 @@
+{% extends 'core/../base.html' %}
+
+{% block title %}Add Event{% endblock %}
+
+{% block content %}
+<h1>Add Event</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Add Event</button>
+</form>
+{% endblock %}

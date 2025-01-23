@@ -1,0 +1,21 @@
+{% extends 'core/../base.html' %}
+
+{% block title %}Login Success{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">Welcome Back, {{ user.username }}!</h1>
+            <p>Thank you for logging in. You will be redirected to your profile shortly.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Redirect to the profile page after 3 seconds
+    setTimeout(function() {
+        window.location.href = "{% url 'profile' %}";
+    }, 3000);
+</script>
+{% endblock %}

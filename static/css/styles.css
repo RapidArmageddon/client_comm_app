@@ -1,0 +1,228 @@
+/* General Body Styling */
+body {
+    background-color: rgba(249, 231, 212, 255) !important; /* Adjusted to rgba */
+    color: rgb(249, 231, 212);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    padding-top: 70px; /* Prevents content from overlapping the fixed nav */
+    min-height: 100vh; /* Ensures body stretches to full viewport height */
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: rgb(249, 231, 212, 255);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
+    z-index: 1000;
+}
+
+.navbar-nav .nav-link {
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar-nav .nav-link:hover {
+    color: rgb(84, 146, 175);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: black;
+}
+
+.separator {
+    color: #000; /* Adjust separator color */
+    margin: 0 10px; /* Add spacing around the separator */
+    display: inline-block; /* Ensure it behaves like text */
+    position: relative;
+    top: 7px; /*adjust to lower if needed, higher number is lower down*/
+    opacity: 0.3;
+}
+
+.navbar-brand:hover {
+    color: rgb(84, 146, 175);
+}
+
+/* User Actions (Welcome + Logout/Login) */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between welcome message and button */
+}
+
+.welcome-message {
+    margin: 0;
+    font-size: 14px;
+    color: black;
+    font-weight: bold;
+}
+
+.btn-outline-primary {
+    color: rgb(84, 146, 175);
+    border-color: rgb(84, 146, 175);
+}
+
+.btn-outline-primary:hover {
+    background-color: rgb(84, 146, 175);
+    color: white;
+}
+
+/* Home Background Styling */
+.home-background {
+    #background: url('/static/images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh; /* Covers the entire viewport height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px; /* Adds spacing around the content */
+}
+
+/* Rounded Card Styling */
+.card {
+    background-color: white;
+    color: black;
+    border: 1px solid rgb(236, 217, 198);
+    border-radius: 15px; /* Rounded corners */
+    padding: 20px; /* Inner spacing */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Larger shadow for emphasis */
+    max-width: 1200px; /* Wider card */
+    width: 90%; /* Responsive width */
+    margin: 20px auto; /* Center card and add spacing from other elements */
+}
+
+/* Table Styles */
+.table {
+    background-color: white;
+    color: black;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table th, .table td {
+    border: 1px solid rgb(236, 217, 198);
+    padding: 10px;
+    text-align: left;
+}
+
+.table th {
+    background-color: rgb(236, 217, 198);
+    color: black;
+}
+
+/* Card Title */
+.card-title {
+    font-weight: bold;
+    text-align: center; /* Centers the card title */
+}
+#calendar {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+<table id="message-table" class="table table-striped" style="display: block;">
+}
+.copied {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.copyable {
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.copyable.copied {
+    background-color: #d4edda; /* Light green background */
+    color: #155724; /* Dark green text */
+    font-weight: bold;
+}
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Hero Image Section */
+.hero-image {
+    position: relative;
+    width: 100vw; /* Full viewport width */
+    height: 100vh; /* Full viewport height */
+    margin: 0; /* Remove any margins */
+    padding: 0; /* Remove padding */
+    overflow: hidden; /* Prevent overflow */
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.hero-image img {
+    width: 100%; /* Ensure the image spans the full width */
+    height: 100%; /* Ensure the image spans the full height */
+    object-fit: cover; /* Scale the image to fill the container without distortion */
+    display: block; /* Prevent inline image spacing issues */
+}
+
+.hero-text {
+    position: absolute; /* Place text over the image */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust position */
+    text-align: center; /* Center text within the div */
+    color: #205375; /* Navy blue */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Subtle shadow for readability */
+    z-index: 10; /* Ensure text is above the image */
+    font-size: 3rem; /* Adjust as needed */
+}
+
+.hero-text h1 {
+    font-size: 3rem; /* Adjust font size */
+    margin-bottom: 1rem; /* Add spacing below heading */
+    font-weight: bold; /* Make it bold for emphasis */
+}
+
+.hero-text p {
+    font-size: 1.5rem; /* Adjust paragraph size */
+    margin: 0; /* Remove margin above and below */
+}
+/* Hero Text Styling */
+.hero-text {
+    position: absolute; /* Position the text over the image */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Fine-tune centering */
+    text-align: center; /* Center text inside the container */
+    color: white; /* Text color */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Add shadow for readability */
+    z-index: 2; /* Ensure the text is above the image */
+}
+
+.hero-text h1 {
+    font-size: 3rem; /* Adjust heading size */
+    margin-bottom: 1rem; /* Space below heading */
+    font-weight: bold; /* Bold text */
+}
+
+.hero-text p {
+    font-size: 1.5rem; /* Adjust paragraph size */
+    margin-top: 0; /* Remove any margin above */
+}
+
+/* Fix Container Margins */
+.container {
+    margin: 0 auto; /* Center-align */
+    padding: 20px;
+    max-width: 1200px; /* Restrict width for readability */
+}
+
+/* Global Reset for Borders */
+* {
+    box-sizing: border-box; /* Include padding/margin in size calculations */
+}

@@ -1,0 +1,119 @@
+{% extends 'core/../base.html' %}
+{% load static %} <!-- Load the static template library -->
+
+{% block title %}Home{% endblock %}
+
+
+{% block hero %}
+<div class="hero-image">
+    <img src="{% static 'images/landing.jpg' %}" alt="AutoCRM Hero">
+    <div class="hero-text">
+        <h1 class="fw-bold">Welcome to AutoCRM</h1>
+        <p class="fs-4">Revolutionizing customer engagement through automation</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<!-- Main Content Card -->
+<div class="container my-4">
+    <div class="card mt-5">
+        <div class="text-center p-4">
+            <!-- About AutoCRM -->
+            <h2 class="mb-4">Why Choose AutoCRM?</h2>
+            <p class="mb-5">
+                AutoCRM is your ultimate solution for automating customer interactions, personalizing outreach, and driving sales growth.
+                From tailored text campaigns to real-time analytics and credit management, AutoCRM empowers your business with
+                seamless communication and unparalleled efficiency.
+            </p>
+
+            <!-- Pricing Structure -->
+            <h2 class="mb-4">Flexible Pricing Plans</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Pay Per Use</h5>
+                            <p class="card-text">
+                                Flat fee of $2 per 50 credits, where 1 credit equals 1 message. Ideal for occasional users.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Sales Business</h5>
+                            <p class="card-text">
+                                $60/month for up to 2,000 messages. Perfect for small to medium-sized businesses.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Enterprise</h5>
+                            <p class="card-text">
+                                Custom pricing tailored to your organization’s needs. Includes dedicated support and scalability.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Comparison Table -->
+            <h2 class="mt-5 mb-3">Feature Comparison</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Pay Per Use</th>
+                        <th>Sales Business</th>
+                        <th>Enterprise</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Messages Cap</td>
+                        <td>Paid per use</td>
+                        <td>2,000/month</td>
+                        <td>Unlimited</td>
+                    </tr>
+                    <tr>
+                        <td>Customer Support</td>
+                        <td>Email</td>
+                        <td>Email &amp; Chat</td>
+                        <td>Dedicated Support</td>
+                    </tr>
+                    <tr>
+                        <td>WhatsApp Integration</td>
+                        <td>Included</td>
+                        <td>Included</td>
+                        <td>Customizable</td>
+                    </tr>
+                    <tr>
+                        <td>Analytics Dashboard</td>
+                        <td>Basic Insights</td>
+                        <td>Detailed Analytics</td>
+                        <td>Advanced Custom Reports</td>
+                    </tr>
+                    <tr>
+                        <td>Multi-User Access</td>
+                        <td>Single User</td>
+                        <td>Up to 5 Users</td>
+                        <td>Custom User Roles</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Call to Action -->
+            <h2 class="mt-5">Ready to Transform Your Customer Engagement?</h2>
+            <p class="mb-4">Get started with AutoCRM today and unlock the potential of personalized communication!</p>
+            <a href="/register/" class="btn btn-primary btn-lg">Sign Up Now</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
